@@ -1,5 +1,4 @@
 from django.shortcuts import render, redirect, get_object_or_404
-
 from item.models import Item
 from .models import Conversation
 from .forms import ConversationMessageForm
@@ -17,6 +16,7 @@ def new_conversation(request, item_pk):
         item=item).filter(members__in=[request.user.id])
 
     if conversations:
+        # Redirect to item detail if conversation exists
         return redirect('item:detail', pk=item_pk)
 
     if request.method == "POST":
@@ -34,9 +34,9 @@ def new_conversation(request, item_pk):
 
             return redirect('item:detail', pk=item_pk)
 
-        else:
-            form = ConversationMessageForm()
+    else:
+        form = ConversationMessageForm()
 
-        return render(request, 'conversation/new.html', {
-            'form': form,
-        })
+    return render(request, 'conversation/new.html', {
+        'form': form,
+    })
